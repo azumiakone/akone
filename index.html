@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hemaa | 20 Years of Grace</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --accent: #e0b0ff; 
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --line-color: rgba(224, 176, 255, 0.2);
+            --gold: #ffd700;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- ENTRANCE OVERLAY --- */
+        #entrance-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0a0a0a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s;
+        }
+
+        .entrance-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 15px 40px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(224, 176, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .entrance-btn:active {
+            transform: scale(0.95);
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* --- MUSIC CONTROL --- */
+        #music-control {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 2000;
+            background: rgba(224, 176, 255, 0.15);
+            border: 1px solid var(--accent);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.8;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20px; bottom: 20px; left: 20px; right: 20px;
+            border: 1px solid rgba(224, 176, 255, 0.1);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-content {
+            z-index: 10;
+            animation: fadeInScale 1.5s ease-out;
+            width: 100%;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .age-circle {
+            width: 72px;
+            height: 72px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(224, 176, 255, 0.2);
+        }
+
+        .hero-top {
+            letter-spacing: 4px;
+            font-size: 0.63rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .name-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .birthday-wish {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--accent);
+            text-shadow: 0 0 12px rgba(224, 176, 255, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .hero-sub {
+            color: var(--text-dim);
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        /* --- PHOTO ZOOM POPUP --- */
+        #photoPopup {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0);
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.4s ease;
+        }
+        
+        #photoPopup.active { background: rgba(0,0,0,0.95); }
+
+        #photoPopup img, #photoPopup video {
+            max-width: 90%;
+            max-height: 70%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(224, 176, 255, 0.6);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease;
+        }
+
+        #photoPopup.active img, #photoPopup.active video { transform: scale(1); opacity: 1; }
+
+        #popupCaption {
+            color: #e0b0ff; 
+            margin-top: 25px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.4rem;
+            text-align: center;
+            max-width: 85%;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: transform 0.6s ease 0.2s, opacity 0.6s ease 0.2s;
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            backdrop-filter: none;
+            border: none;
+            text-shadow: 0 0 10px rgba(224, 176, 255, 0.8);
+        }
+
+        #photoPopup.active #popupCaption { opacity: 1; transform: translateY(0); }
+
+        /* --- STORY CONTAINER --- */
+        .story-container {
+            padding: 80px 20px;
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .story-container::before {
+            content: '';
+            position: absolute;
+            left: 30px; top: 0; bottom: 0; width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--line-color), var(--line-color), transparent);
+        }
+
+        .story-moment {
+            position: relative;
+            margin-bottom: 120px; 
+            padding-left: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .story-moment.reveal { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        .moment-dot {
+            width: 10px; height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: absolute;
+            left: 26px; top: 10px;
+            box-shadow: 0 0 12px var(--accent);
+        }
+
+        .moment-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .moment-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .moment-text {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            max-width: 95%;
+        }
+
+        .moment-photo, .photo-frame img, .photo-frame video {
+            width: 100%;
+            max-width: 260px;
+            border-radius: 4px;
+            border: 1px solid rgba(224, 176, 255, 0.4);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: intensePhotoGlow 2.5s infinite ease-in-out;
+        }
+
+        @keyframes intensePhotoGlow {
+            0% { box-shadow: 0 0 15px rgba(224, 176, 255, 0.2); filter: brightness(1); }
+            50% { box-shadow: 0 0 20px rgba(224, 176, 255, 0.7); filter: brightness(1.1); }
+            100% { box-shadow: 0 0 15px rgba(224, 176, 255, 0.2); filter: brightness(1); }
+        }
+
+        .moment-photo:active { transform: scale(0.97); }
+
+        .click-hint {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--accent);
+            margin-top: 10px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        /* --- GALLERY --- */
+        .gallery-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+            margin: 80px 0 15px;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .mobile-gallery {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 15px;
+            padding: 0 30px 50px;
+            scrollbar-width: none;
+        }
+
+        .mobile-gallery::-webkit-scrollbar { display: none; }
+
+        .photo-frame {
+            min-width: 240px;
+            scroll-snap-align: center;
+            background: #111;
+            padding: 8px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .photo-frame img, .photo-frame video { width: 100%; display: block; margin-bottom: 8px; height: 300px; object-fit: cover; cursor: pointer; }
+
+        .photo-caption {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #e0b0ff;
+            border-top: none;
+            padding-top: 8px;
+        }
+
+        .photo-date {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        /* --- VIDEO GRID --- */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            max-width: 380px;
+            margin: 25px auto;
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--line-color);
+            border-radius: 10px;
+            padding: 20px 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-card.locked { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
+        .video-card.watched { border-color: var(--accent); background: rgba(224, 176, 255, 0.08); }
+        .status-dot { position: absolute; top: 8px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: #444; }
+        .watched .status-dot { background: #00ff00; box-shadow: 0 0 6px #00ff00; }
+
+        /* --- FINAL MESSAGE --- */
+        #final-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 2s ease-in;
+        }
+        .final-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(224, 176, 255, 0.4);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #videoOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 1000; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+        }
+
+        #birthdayVideo { width: 85%; max-width: 380px; border-radius: 12px; }
+        .close-video { margin-top: 25px; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 8px 18px; border-radius: 5px; }
+        
+        #star-bg { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: -1; pointer-events: none; 
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: moveStar linear infinite;
+        }
+
+        @keyframes moveStar {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100vh); }
+        }
+
+        footer { padding: 60px 20px; text-align: center; font-family: 'Playfair Display', serif; font-size: 0.7rem; color: var(--text-dim); }
+    </style>
+</head>
+<body>
+
+<div id="entrance-overlay">
+    <button class="entrance-btn" onclick="startEverything()">Click To Reveal Akonee😁</button>
+</div>
+
+<div id="star-bg"></div>
+
+<div id="photoPopup" onclick="closePhoto()">
+    <div id="popupContainer" style="position:relative; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+        <img src="" id="popupImg" style="display:none;">
+        <video id="popupVideo" style="display:none;" controls></video>
+        <div id="popupCaption"></div>
+    </div>
+</div>
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="birthday-song.mp3" type="audio/mpeg">
+</audio>
+
+<button id="music-control" onclick="toggleMusic()">
+    <span id="music-icon">🎵</span> <span id="music-text">Music On</span>
+</button>
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="age-circle">20</div>
+        <div class="hero-top">A CELEBRATION OF LIFE</div>
+        <h1 class="name-title">Hemaa Sivakumar</h1>
+        <div class="birthday-wish">Happy 20th Birthday</div>
+        <p class="hero-sub">A JOURNEY OF TWO DECADES</p>
+        <p class="hero-sub">10.03.2006 - 10.03.2026</p>
+    </div>
+    <div class="scroll-hint">Tap the photos for my secrets ↓</div>
+</section>
+
+<section class="story-container">
+    <div class="story-moment">
+        <div class="moment-dot"></div>
+        <span class="moment-year">2013 • THE BEGINNING</span>
+        <h3 class="moment-title">A Classroom <br>Called Destiny</h3>
+        <p class="moment-text">We were just 3rd standard kids, innocent and wild. Strangers at first, then inseparable best friends. You proposed with that childhood bravery, I accepted, and a story began that time couldn't erase.</p>
+        <img src="1.jpg" class="moment-photo" data-caption="Where it all started..But Definitely Not An INFATUATION. our first chapter. You were my first 'yes' and my best decision." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <span class="click-hint">Tap image to read the secret note ✨</span>
+    </div>
+
+    <div class="story-moment">
+        <div class="moment-dot"></div>
+        <span class="moment-year">THE SILENT YEARS</span>
+        <h3 class="moment-title">Lost in the Crowd, <br>Found in Dreams</h3>
+        <p class="moment-text">4th standard took you to a different school, and silence fell between us for years. But fate wasn't done. By 8th grade, you started appearing in my dreams, driving me to search every corner just to find a trace of you. I drove "Adharsh" and "VNI" to get any clue on you.</p>
+        <img src="2.jpg" class="moment-photo" data-caption="Even in the silence, you were never forgotten. My dreams knew you belonged in my reality." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <span class="click-hint">Tap image to read the secret note ✨</span>
+    </div>
+
+    <div class="story-moment">
+        <div class="moment-dot"></div>
+        <span class="moment-year">12TH STANDARD • REUNION</span>
+        <h3 class="moment-title">Ten Years Later, <br>The Pieces Fit</h3>
+        <p class="moment-text">After a decade of longing and "what-ifs," the universe finally conspired to bring you back. We transformed from distant memories into the thickest "Tom & Jerry Relationship" bond imaginable.</p>
+        <img src="3.jpg" class="moment-photo" data-caption="The reunion that changed everything. Ten years was worth the wait for this." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <span class="click-hint">Tap image to read the secret note ✨</span>
+    </div>
+
+    <div class="story-moment">
+        <div class="moment-dot"></div>
+        <span class="moment-year">2026 • THE PRESENT</span>
+        <h3 class="moment-title">My Constant <br>Crying Shoulder</h3>
+        <p class="moment-text">Today, you are my sanctuary. Through the highs and the crashing lows, you’ve been the only shoulder I lean on. You are my helping hand, my peace, and my favorite person and you are my everything🫂🥹.</p>
+        <img src="4.jpg" class="moment-photo" data-caption="My peace in a chaotic world. Thank you for never letting go of my hand." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <span class="click-hint">Tap image to read the secret note ✨</span>
+    </div>
+
+    <div class="story-moment">
+        <div class="moment-dot"></div>
+        <span class="moment-year">THE FOREVER WISH</span>
+        <h3 class="moment-title">Praying for <br>A Miracle</h3>
+        <p class="moment-text">Life has its cracks, and time can be harsh, but I pray every single day for the miracle that keeps you by my side forever. You are my only one, my rare gem ( Diamond ). Please Don't Leave Me In Any Moment. You are my protective gear. I Need You Madly At Every Second Of My Life😅🥹. You Will Be Always In My Prayers.</p>
+        <img src="5.jpg" class="moment-photo" data-caption="Praying for our forever miracle🫂🥹. Be with me always, Happiest Birthday, Hemaa Sivakumar❤️" onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <span class="click-hint">Tap image to read the secret note ✨</span>
+    </div>
+</section>
+
+<h2 class="gallery-title">Memories</h2>
+<div class="mobile-gallery">
+    <div class="photo-frame">
+        <span class="photo-date">March 10, 2024</span>
+        <img src="wish2024.jpeg" data-caption="My First BDay Wish, You Revealed Me In The Last Moment. Memorable Day😁❤️." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">Chapter 2024</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+    <div class="photo-frame">
+        <span class="photo-date">March 10, 2025</span>
+        <img src="wish2025a.jpeg" data-caption="Growth Is Stronger Between Us Jerry🐿️." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">Chapter 2025</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+    <div class="photo-frame">
+        <span class="photo-date">March 10, 2025</span>
+        <img src="wish2025b.jpeg" data-caption="Another year of us, Waited 365 Days To This Another Memorable Day Of Yours😌." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">Chapter 2025</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+    <div class="photo-frame">
+        <span class="photo-date">June 2013 - March 2014</span>
+        <img src="group.jpeg" data-caption="A Little Charmy Girl Who Stole My Heart At That Time❤️😅" onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">The Start Of Art</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+    <div class="photo-frame">
+        <span class="photo-date">Somewhere On 2020</span>
+        <img src="green.jpeg" data-caption="On The Journey Of Finding You, Thanks To Your Classmate, Your First Teen Photo ( Treasure )." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">Teenage Treasure</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+    <div class="photo-frame">
+        <span class="photo-date">December 29, 2023</span>
+        <img src="yellow.jpeg" data-caption="Our First Meet With Rapid Races Of Heartbeats😅💓🫀." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">First Offline Meet</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+    <div class="photo-frame">
+        <span class="photo-date">August 20 - 29, 2024</span>
+        <img src="white.jpeg" data-caption="Angel In Every Frame🪽. Manifesting You More Your Beauty🤍. 100% Beggings , 0% Self-Respect🤣" onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">Onam White🤍</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+
+    <div class="photo-frame">
+        <span class="photo-date">May 10, 2025</span>
+        <video src="psgcas.mp4" muted loop autoplay playsinline data-caption="I Meet You But No Words To Describe That Feeling, Like A Blessing To See You😅❤️." onclick="zoomPhoto(this.src, this.dataset.caption, true)"></video>
+        <div class="photo-caption">PSGCAS 2025</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap video 👆</span>
+    </div>
+
+    <div class="photo-frame">
+        <span class="photo-date">July 8, 2025</span>
+        <img src="aquarium.jpeg" data-caption="First Outing, Best Outing Fulled And Filled With Joy And Excitement😭❤️Very Memorable Day, Also First Handshakes." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">Aquarium</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+
+    <div class="photo-frame">
+        <span class="photo-date">January 14, 2026</span>
+        <img src="pongal.jpeg" data-caption="Traditional Vibes and Stunning Visuals Making Me Fall For You Even More😭." onclick="zoomPhoto(this.src, this.dataset.caption)">
+        <div class="photo-caption">Blue & Beige💙🤍</div>
+        <span class="click-hint" style="font-size: 0.5rem;">Tap image 👆</span>
+    </div>
+</div>
+
+<div class="surprise-wrapper">
+    <h2 class="gallery-title" style="margin-top: 0;">Special Wishes</h2>
+    <p style="text-align: center; color: var(--text-dim); font-size: 0.7rem; letter-spacing: 1px; margin-top: -10px; margin-bottom: 20px;">Use headphones for best experiences 🎧</p>
+    <div class="video-grid">
+        <div class="video-card" onclick="openSurprise(0)" id="card-0"><div class="status-dot"></div><div style="font-size: 1.1rem;">🎬</div><span class="card-label" id="name-0">Friend 1</span></div>
+        <div class="video-card" onclick="openSurprise(1)" id="card-1"><div class="status-dot"></div><div style="font-size: 1.1rem;">🎬</div><span class="card-label" id="name-1">Friend 2</span></div>
+        <div class="video-card" onclick="openSurprise(2)" id="card-2"><div class="status-dot"></div><div style="font-size: 1.1rem;">🎬</div><span class="card-label" id="name-2">Friend 3</span></div>
+        <div class="video-card locked" onclick="openSurprise(3)" id="card-3">
+            <div id="lock-icon" style="font-size: 1.1rem;">🔒</div>
+            <span id="name-3" class="card-label">Friend 4</span>
+            <span id="watch-label" style="font-size: 0.5rem; color: var(--accent); display: none;">Watch Fully😌😅!💎</span>
+        </div>
+    </div>
+</div>
+
+<div id="final-message">
+    <h1 class="final-text">Happiest Birthday Hemaa! ❤️</h1>
+    <p style="color: var(--text-dim); letter-spacing: 2px; font-size: 0.8rem;">THE MIRACLE I PRAYED FOR</p>
+    <p style="color: var(--text-dim); letter-spacing: 2px; font-size: 0.8rem; margin-top: 25px;">
+        AS MY FINAL ACT OF CARE, YOU ARE MY ONLY SUNSHINE! PLEASE DONT EVER TRY TO LEAVE ME MY GODDESS💎, I AM VERY BLESSED TO SEE AND HAVE YOU IN MY LIFE. HOPE TABLES TURN OVER ON YOUR BIRTHDAY AND COME BACK TO ME🫂, 
+        HAPPY BIRTHDAY MY SECOND MOM🥹🫂❤️
+    </p>
+</div>
+
+<div id="videoOverlay">
+    <video id="birthdayVideo" controls playsinline><source src="" type="video/mp4"></video>
+    <button class="close-video" onclick="closeSurprise()">CLOSE SURPRISE</button>
+</div>
+
+<footer>
+    <p>Handcrafted for Hemaa by Sachin❤️</p>
+</footer>
+
+<script>
+    const audio = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('music-control');
+    const musicText = document.getElementById('music-text');
+
+    function startEverything() {
+        audio.play().catch(e => console.log("Audio play blocked"));
+        const overlay = document.getElementById('entrance-overlay');
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.visibility = 'hidden'; }, 1000);
+    }
+
+    function toggleMusic() {
+        if (audio.paused) {
+            audio.play(); musicText.innerText = "Music On"; musicBtn.style.opacity = "1";
+        } else {
+            audio.pause(); musicText.innerText = "Music Off"; musicBtn.style.opacity = "0.5";
+        }
+    }
+
+    const bg = document.getElementById('star-bg');
+    function createStars() {
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            const duration = 5 + Math.random() * 15;
+            star.style.animationDuration = duration + 's';
+            star.style.animationDelay = Math.random() * -20 + 's';
+            bg.appendChild(star);
+        }
+    }
+    createStars();
+
+    const revealOnScroll = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { 
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal'); 
+            } else {
+                entry.target.classList.remove('reveal');
+            }
+        });
+    }, { 
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    });
+    
+    document.querySelectorAll('.story-moment').forEach(el => revealOnScroll.observe(el));
+
+    function zoomPhoto(src, caption, isVideo = false) {
+        const popup = document.getElementById('photoPopup');
+        const img = document.getElementById('popupImg');
+        const video = document.getElementById('popupVideo');
+        const cap = document.getElementById('popupCaption');
+
+        if (isVideo) {
+            img.style.display = 'none';
+            video.style.display = 'block';
+            video.src = src;
+            
+            if(src.includes('psgcas.mp4')) {
+                video.muted = true;
+            } else {
+                video.muted = false;
+            }
+            
+            video.play();
+        } else {
+            video.style.display = 'none';
+            video.pause();
+            img.style.display = 'block';
+            img.src = src;
+        }
+
+        cap.innerText = caption || "";
+        popup.style.display = 'flex';
+        setTimeout(() => { popup.classList.add('active'); }, 10);
+    }
+
+    function closePhoto() {
+        const popup = document.getElementById('photoPopup');
+        const video = document.getElementById('popupVideo');
+        popup.classList.remove('active');
+        video.pause();
+        setTimeout(() => { popup.style.display = 'none'; }, 500);
+    }
+
+    const videoFiles = ['friend1.mp4', 'friend2.mp4', 'friend3.mp4', 'friend4.mp4'];
+    const revealedNames = ['Arul', 'Sam', 'Thrishala', 'Sachin'];
+    let watchedStatus = [false, false, false, false];
+
+    function openSurprise(index) {
+        if (index === 3 && !(watchedStatus[0] && watchedStatus[1] && watchedStatus[2])) {
+            alert("Unlock this by watching the first 3 wishes! ✨"); return;
+        }
+        audio.pause(); 
+        const v = document.getElementById('birthdayVideo');
+        v.src = videoFiles[index];
+        document.getElementById('videoOverlay').style.display = 'flex';
+        v.play();
+        watchedStatus[index] = true;
+        document.getElementById(`card-${index}`).classList.add('watched');
+        document.getElementById(`name-${index}`).innerText = revealedNames[index];
+        if (index < 3) checkUnlock();
+    }
+
+    function checkUnlock() {
+        if (watchedStatus[0] && watchedStatus[1] && watchedStatus[2]) {
+            document.getElementById('card-3').classList.remove('locked');
+            document.getElementById('lock-icon').innerText = "💝";
+            document.getElementById('watch-label').style.display = "block";
+        }
+    }
+
+    function closeSurprise() {
+        const video = document.getElementById('birthdayVideo');
+        const isFinal = video.src.includes('friend4.mp4');
+        video.pause();
+        video.src = "";
+        document.getElementById('videoOverlay').style.display = 'none';
+        if (isFinal) {
+            document.getElementById('final-message').style.display = 'block';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+        if (musicText.innerText === "Music On") audio.play();
+    }
+</script>
+
+</body>
+</html>
